@@ -1,0 +1,99 @@
+section:first-of-type {
+  margin-top: 1em;
+  @media (min-width: 576px) {
+    margin-top: 3em;
+  }
+}
+
+section {
+  margin-bottom: 5em;
+  min-width: var(--global-min-width);
+}
+
+section:not(:first-of-type) {
+  @media(min-width: 576px) {
+    margin-top: 3em;
+    margin-bottom: 3em;
+  }
+}
+
+section.walled {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+section.walled main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+
+  @media(min-width: 576px) { width: 85%; }
+  @media(min-width: 800px) { width: 75%; }
+  @media(min-width: 1024px) { width: 65%; }
+}
+
+section.walled main .wrap {
+  margin: 2em;
+  @media (min-width: 576px) {
+    margin: 13em 5em;
+  }
+}
+
+section.walled aside {
+  position: absolute;
+  right: 0;
+  top: 105px;
+  width: 74%;
+  height: 70%;
+
+  @media (min-width: 576px) {
+    top: 0px;
+    height: 90%;
+  }
+
+  z-index: -1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  opacity: 0.65;
+  border-radius: 60px;
+  margin: 2em;
+}
+
+.bg1 aside { background-image: url("../img/2.JPG"); background-size: cover; background-position: bottom; }
+.bg2 aside { background-image: url("../img/3B.JPG"); background-size: cover; background-position: bottom; }
+.bg3 aside { background-image: url("../img/4A.JPG"); background-size: cover; }
+.bg4 aside { background-image: url("../img/5.JPG"); backgrou-size: cover; background-position: bottom; }
+
+section.walled.reverse {
+  flex-direction: row-reverse;
+  text-align: right;
+  aside {
+    left: 0;
+    right: unset;
+  }
+}
+
+section.centered {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+
+  main .wrap {
+    margin: 3em;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    @media(min-width: 576px) {
+      margin: 2em 5em;
+    }
+  }
+}

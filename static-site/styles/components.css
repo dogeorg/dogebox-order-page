@@ -1,0 +1,49 @@
+#OptionPicker {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  @media (min-width: 576px) {
+    display: none;
+  }
+  
+  .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 10px;
+    border: 2px solid var(--color-lobster);
+    margin: 0em 0.6em;
+  }
+
+  .dot.selected {
+    background: var(--color-lobster);
+  }
+
+  .dot:hover {
+    background: var(--color-lobster);
+    cursor: pointer;
+  }
+}
+
+#ProductOptions {
+  transition: transform 300ms ease;
+}
+
+#ProductRange {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  gap: 2em;
+  margin-top: 2em;
+  margin-bottom: 4em;
+  transition: scale 300ms ease, transform 300ms ease;
+
+  .selected {
+    scale: 1;
+    @media (min-width: 576px) {
+      scale: 1.1;
+    }
+  }
+}
