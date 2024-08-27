@@ -1,0 +1,178 @@
+  <sl-dialog label="DogeBox Pup Specs" class="DogeBoxDetail1" id="db1-dialog" style="--width: 100vw;">
+    <img src="img/dogebox_1.png" alt="DogeBox Shibes" style="max-height: 200px; width: auto; margin: auto; padding: 10px; display: inline-block;" />
+  
+    <sl-tab-group class="dogeboxTab">
+      <sl-tab slot="nav" panel="description">Description</sl-tab>
+      <sl-tab slot="nav" panel="specs">Specs</sl-tab>
+      <sl-tab slot="nav" panel="gallery">Gallery</sl-tab>
+      <sl-tab slot="nav" id="btn2500-in" onclick="dbdetails1.hide();">
+        <i class="fa-solid fa-paw" style="margin-right: 5px;"></i> Pre-Order
+      </sl-tab>
+  
+      <sl-tab-panel name="description">
+        <div style="word-break: break-all;">
+          NanoPC-T6 LTS (as "T6") is a high-performance open-source platform for edge computing, designed and developed by the FriendlyElec team.
+          <br /><br />
+          It has two 2.5G Ethernet ports and is based on Rockchip's RK3588. It features 4GB/8GB/16GB LPDDR4x RAM and an optional 32GB/64GB/256GB eMMC flash. Compatible with systems including OpenMediaVault, FriendlyWrt, Android, Android TV, Debian, Ubuntu, etc. Supports GPU and VPU acceleration.
+          <br /><br />
+          T6 is a compact board of 110 x 80 mm with rich hardware resources and an optional CNC metal case. It has 2 HDMI output ports and 1 HDMI IN port. T6 can play video streams including 8K60p H.265/VP9, 8K30p H264, etc., and record video streams including 4K60p H.265. It has one M.2 B-Key slot for NVME SSD disks and one M.2 E-Key for a 2230 WiFi module.
+          <br /><br />
+          Additionally, T6 includes one USB 3.0 port, two USB 2.0 ports, and one full-featured USB-C port powered by DC-12V.
+          <br /><br />
+          In summary, T6 is well-suited for enterprise customers developing mini machine vision systems with multiple Ethernet ports and for embedded system hobbyists exploring and implementing prototype designs.
+        </div>
+      </sl-tab-panel>
+  
+      <sl-tab-panel name="specs">
+        <table id="specsTable" class="display" style="width: 100%;">
+          <thead>
+            <tr>
+              <th>Component</th>
+              <th>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>CPU</td>
+              <td>
+                Model: Rockchip RK3588<br />
+                Number of Cores: Quad-core ARM Cortex-A76 + Quad Core Cortex-A55<br />
+                Frequency: Cortex-A76 (up to 2.4GHz), Cortex-A55 (up to 1.8GHz)
+              </td>
+            </tr>
+            <tr>
+              <td>GPU</td>
+              <td>Mali-G610 MP4, compatible with OpenGLES 1.1, 2.0, and 3.2, OpenCL up to 2.2, and Vulkan 1.2</td>
+            </tr>
+            <tr>
+              <td>VPU</td>
+              <td>
+                8K@60fps H.265 and VP9 decoder, 8K@30fps H.264 decoder,<br />
+                4K@60fps AV1 decoder, 8K@30fps H.264 and H.265 encoder
+              </td>
+            </tr>
+            <tr>
+              <td>NPU</td>
+              <td>6TOPs, supports INT4/INT8/INT16/FP16</td>
+            </tr>
+            <tr>
+              <td>Memory</td>
+              <td>RAM: 64-bit 4GB/8GB/16GB LPDDR4X at 2133MHz</td>
+            </tr>
+            <tr>
+              <td>Storage</td>
+              <td>
+                eMMC: 0GB/32GB/64GB/256GB at HS400 mode<br />
+                1 x MicroSD Slot: supports up to SDR104 mode<br />
+                PCIe 3.0: 1 x M.2 M-Key, PCIe 3.0 x4 for NVMe SSDs up to 2,500 MB/s<br />
+                Onboard M3 PCB nut for mounting M.2 2280 module
+              </td>
+            </tr>
+            <tr>
+              <td>Connectivity</td>
+              <td>
+                Ethernet: 2 x PCIe 2.5G Ethernet, RTL8125BG chip<br />
+                PCIe 2.1: 1 x M.2 E-Key, PCIe 2.1 x1 and USB2.0 Host, supports M.2 WiFi and Bluetooth Module<br />
+                Onboard M3 PCB nut for mounting M.2 2230 module
+              </td>
+            </tr>
+            <tr>
+              <td>Audio</td>
+              <td>
+                Audio Out: 3.5mm jack for stereo headphone output<br />
+                Audio In: 2.0mm PH-2A connector for analog microphone input
+              </td>
+            </tr>
+            <tr>
+              <td>Video Input</td>
+              <td>
+                1 x Standard HDMI input port, up to 4Kp60<br />
+                2 x 4-lane MIPI-CSI, compatible with MIPI V1.2
+              </td>
+            </tr>
+            <tr>
+              <td>Video Output</td>
+              <td>
+                2 x Standard HDMI output ports:<br />
+                Compatible with HDMI2.1, HDMI2.0, and HDMI1.4<br />
+                One supports displays up to 7680x4320@60Hz, another supports up to 4Kp60<br />
+                Support RGB/YUV (up to 10bit) format<br />
+                2 x 4-lane MIPI-DSI, compatible with MIPI DPHY 2.0 or CPHY 1.1
+              </td>
+            </tr>
+            <tr>
+              <td>USB</td>
+              <td>
+                2 x USB 2.0, Type-A<br />
+                1 x USB 3.0, Type-A<br />
+                1 x USB-C: Full function USB Type-C™ port, supports DP display up to 4Kp60, USB 3.0
+              </td>
+            </tr>
+            <tr>
+              <td>Pin-header</td>
+              <td>
+                GPIO: 40-pin 2.54mm header connector<br />
+                Up to 2 x SPIs, 6 x UARTs, 1 x I2C, 8 x PWMs, 2 x I2S, 28 x GPIOs<br />
+                GPIO2: 10-pin 2.54mm header connector including Debug UART (3.3VTTL) and 2 x USB 2.0 Host
+              </td>
+            </tr>
+            <tr>
+              <td>User Key</td>
+              <td>
+                1 x MASK Button for eMMC update<br />
+                1 x Reset Button<br />
+                1 x Power Button
+              </td>
+            </tr>
+            <tr>
+              <td>LED</td>
+              <td>
+                1 x SYS LED (Red)<br />
+                1 x LED1 (Green)
+              </td>
+            </tr>
+            <tr>
+              <td>Others</td>
+              <td>
+                IR receiver: Onboard IR receiver, accepts 38KHz carrier frequency<br />
+                RTC Battery: 2 Pin 1.27/1.25mm RTC battery input connector for low power RTC IC HYM8563TS<br />
+                Fan: 5V Fan connector<br />
+                Working Temperature: 0℃ to 70℃
+              </td>
+            </tr>
+            <tr>
+              <td>Power</td>
+              <td>
+                5.5*2.1mm DC Jack & 2-Pin 3.5mm pitch connector, 12VDC input
+              </td>
+            </tr>
+            <tr>
+              <td>PCB</td>
+              <td>8 Layer</td>
+            </tr>
+            <tr>
+              <td>Weight</td>
+              <td>
+                91.5g (without Case) / 390g (with Case)
+              </td>
+            </tr>
+            <tr>
+              <td>Dimension</td>
+              <td>
+                110x80x1.6mm (without Case) / 86x114.5x30mm (with Case)
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </sl-tab-panel>
+  
+      <sl-tab-panel name="gallery">
+        <div class="dbgallery"><img src="img/hw/01.jpg" alt="Gallery Image 1" /></div>
+        <div class="dbgallery"><img src="img/hw/02.jpg" alt="Gallery Image 2" /></div>
+        <div class="dbgallery"><img src="img/hw/03.jpg" alt="Gallery Image 3" /></div>
+        <div class="dbgallery"><img src="img/hw/04.jpg" alt="Gallery Image 4" /></div>
+        <div class="dbgallery"><img src="img/hw/05.jpg" alt="Gallery Image 5" /></div>
+      </sl-tab-panel>
+    </sl-tab-group>
+  </sl-dialog>
+  

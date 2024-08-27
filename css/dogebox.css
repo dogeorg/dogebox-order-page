@@ -1,0 +1,113 @@
+body {
+    font-family: 'Comic Neue', sans-serif;
+    padding: 20px;
+}
+
+.step {
+    display: none;
+}
+
+.step.active {
+    display: block;
+}
+
+.button-group sl-button {
+    margin: 10px;
+}
+
+.terms {
+    background-color: #333;
+    padding: 10px;
+    height: 100px;
+    overflow-y: scroll;
+    border: 1px solid #555;
+    margin-bottom: 10px;
+}
+
+sl-input,
+sl-select,
+sl-button {
+    margin-top: 10px;
+}
+
+:root {
+    --sl-toggle-size: 18px;
+    --sl-color-primary-600: #fff; 
+}
+
+sl-button::part(base) {
+    background-color: #580DA9;
+    border: #580DA9;
+    color: #fff;  
+    border-radius: 5px;     
+}
+
+sl-button::part(base):hover {
+    background-color: #fff;
+    border: #580DA9;
+    color: #580DA9; 
+}
+
+.card-text {
+    height: 150px;
+}
+
+sl-card {
+    cursor: pointer;
+    padding: 10px;
+}
+
+sl-card::part(base):hover {
+    border-color: #580DA9; 
+}
+
+.card-overview {
+    max-width: 300px;
+}
+
+.card-overview small {
+    color: var(--sl-color-neutral-500);
+}
+
+.card-overview [slot='footer'] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+sl-tab[active]::part(base) {
+    color: #fff !important;
+}
+
+sl-tab::part(base):hover {
+    color: #fff !important; 
+}
+
+.dogebox-swal {
+    border: 2px solid #580DA9 !important;
+    border-radius: 20px !important;
+}
+
+.swal2-html-container,
+.swal2-title {
+    color: #ffffff !important;
+}
+
+.dbgallery {
+    width: 100%;
+    text-align: center;
+    margin: auto;
+    padding: 10px;     
+}
+
+.dbgallery > img {
+    max-width: 90%;
+    margin: auto;     
+}
+
+@media (max-width: 600px) {
+    .dogeboxgrid {
+        display: inline-grid !important;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+    }
+}
