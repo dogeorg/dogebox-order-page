@@ -7,6 +7,8 @@ body {
   --global-min-width: 360px;
 
   /* colours */
+  --color-bg: #0d0d0d;
+
   --color-yellow: #ffc107;
   --color-yellow-light: #f2c849;
   --color-yellow-dark: #d7a100;
@@ -25,13 +27,16 @@ body {
   --color-gold: #cca747;
   --color-gold-light: #dfc66d;
   --color-gold-dark: #a7782d;
+
+  --color-panel-gradient: linear-gradient(to bottom, #18191e, #18191d);
+
 }
 
 body {
   padding: 0;
   margin: 0;
   color: white;
-  background: #0d0d0d;
+  background: var(--color-bg);
 }
 
 p {
@@ -56,11 +61,30 @@ h3 {
 }
 
 div.divider {
+  position: relative;
   width: 50%;
   margin-left: auto;
   margin-right: auto;
   height: 1px;
   border-bottom: 1px solid var(--color-lobster);
+}
+
+div.divider.or::after {
+  content: "OR";
+  width: 50px;
+  height: 1.5rem;
+  position: absolute;
+  display: inline-block;
+  top: 0;
+  left: 50%;
+  background: var(--color-bg);
+  color: var(--color-lobster);
+  transform: translateX(-50%) translateY(-50%);
+  font-size: 1.5rem;
+  font-family: "Comic Neue";
+  text-align: center;
+  font-style: italic;
+  z-index: 10;
 }
 
 .button {
