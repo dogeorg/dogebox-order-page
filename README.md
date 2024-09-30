@@ -7,6 +7,7 @@
 - GigaWallet Server
 - Shipper Server (https://github.com/dogeorg/shipper)
 
+ ### Needes to import shibes.sql to the MariaDb/MySQL
  ### Configuration needed on conf.php to connect to all servers 
  ### Subscribe on GigaWallet for PAYMENT_RECEIVED to URL/callback/ to update payments
 
