@@ -6,36 +6,227 @@
     <title>Such DogeBox Pre-Order</title>
 
     <!-- Load Shoelace -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/themes/dark.css">
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/shoelace-autoloader.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/themes/dark.css">
+    <script type="module" src="//cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/shoelace-autoloader.js"></script>
 
     <!-- Load Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer">
 
     <!-- Load jQuery -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="//code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <!-- Load Google Font for Doge -->
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue&display=swap" rel="stylesheet">
+    <link href="//fonts.googleapis.com/css2?family=Comic+Neue&display=swap" rel="stylesheet">
 
     <!-- Load DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.dataTables.css">
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="//cdn.datatables.net/2.1.4/css/dataTables.dataTables.css">
+    <script src="//cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
     <!-- Load Global CSS -->
     <link rel="stylesheet" href="css/dogebox.css">
 
     <!-- Load SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
-    <div style="margin: auto; width: fit-content;">
-        <div id="step1" class="step active"></div>
-        <div id="step2" class="step"></div>
-        <div id="step3" class="step"></div>
-    </div>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Load Dogecoin Address validator from Patrick -->
+    <script src="vendors/bs58caddr.bundle.min.js"></script>
+
+    <!-- Load Dogecoin Foundation Fetch -->
+    <script type="module" src="//fetch.dogecoin.org/doge-qr.js"></script>
+    
     <!-- Load Custom JavaScript -->
     <script src="js/dogebox.js"></script>
+</head>
+<body>
+<sl-button style="padding-bottom: 15px;" id="goback" onclick="history.back()">
+    <i class="fa-solid fa-caret-left"></i> Go Back
+</sl-button>
+<div>
+<form class="input-validation-required" id="PayinDoge">
+<div class="shipping-billing-details">
+    <sl-details summary="Shipping Details" open>
+      <div slot="summary" style="display: flex; align-items: center;">
+        <i class="fa-solid fa-truck-fast" style="padding-right: 10px;"></i>
+        <strong>Shipping Details</small>
+      </div>        
+            <sl-input placeholder="Name" name="name" clearable required></sl-input>
+            <sl-input placeholder="Email" name="email" clearable type="email" required></sl-input>
+        
+            <sl-select placeholder="Country" name="country" required>
+                <!-- List of countries -->
+            </sl-select>
+        
+            <sl-input placeholder="Address" name="address" clearable required></sl-input>
+            <sl-input placeholder="Postal Code" name="postalCode" clearable required></sl-input>
+            <sl-input placeholder="Dogecoin Address for Refunds" name="dogeAddress" id="dogeadd" clearable required></sl-input>
+        
+    </sl-details>
+  
+    <sl-details>
+      <div slot="summary" style="display: flex; align-items: center;">
+        <i class="fa-solid fa-file-invoice" style="padding-right: 10px;"></i>
+        <strong>Billing Details</small>
+      </div>         
+      <sl-checkbox id="sameAsShipping" name="billing" style="padding-top: 15px; padding-bottom: 15px;">
+        Billing Address sames as Shipping
+      </sl-checkbox>      
+      <sl-input placeholder="Name" name="bname" clearable required></sl-input>
+      <sl-input placeholder="Email" name="bemail" clearable type="email" required></sl-input>
+  
+      <sl-select placeholder="Country" name="bcountry" required>
+          <!-- List of countries -->
+      </sl-select>
+  
+      <sl-input placeholder="Address" name="baddress" clearable required></sl-input>
+      <sl-input placeholder="Postal Code" name="bpostalCode" clearable required></sl-input>
+    </sl-details>
+  
+    <sl-details>
+      <div slot="summary" style="display: flex; align-items: center;">
+        <i class="fa-solid fa-file-signature" style="padding-right: 10px;"></i>
+        <strong>Terms and Conditions</small>
+      </div>      
+        <!-- Terms of Service -->
+        <p><strong>Dogecoin Foundation - DogeBox Terms of Service</strong></p>
+        <p><strong>Last Updated:</strong> August 22, 2024</p>
+        <p>Welcome to the Dogecoin Foundation's official store! By purchasing a DogeBox, a hardware product offered by the Dogecoin Foundation, you agree to the following Terms of Service. Please read them carefully.</p>
+
+        <h3 id="1-agreement-to-terms-">1. <strong>Agreement to Terms</strong></h3>
+        <p>By accessing and purchasing from this site, you agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree to these terms, please do not purchase our products.</p>
+
+        <h3 id="2-product-description-">2. <strong>Product Description</strong></h3>
+        <p>The DogeBox is a hardware device developed by the Dogecoin Foundation. All product specifications, features, and other information are subject to change without notice. The DogeBox is sold as-is, and the Dogecoin Foundation makes no guarantees regarding its performance, compatibility, or durability beyond those described on the product page.</p>
+
+        <h3 id="3-payment-">3. <strong>Payment</strong></h3>
+        <p>All payments for the DogeBox must be made exclusively in Dogecoin (Ð). The amount of Dogecoin required for purchase is based on the current price listed on our website at the time of checkout.</p>
+
+        <h3 id="4-order-processing-">4. <strong>Order Processing</strong></h3>
+        <p>Orders will be processed after full payment is received and confirmed on the Dogecoin blockchain. Once payment is confirmed, you will receive a confirmation email with the details of your purchase and an estimated shipping date.</p>
+
+        <h3 id="5-shipping-and-delivery-">5. <strong>Shipping and Delivery</strong></h3>
+        <ul>
+            <li>We ship worldwide. Shipping costs are calculated at checkout and must be paid in Dogecoin along with the product cost.</li>
+            <li>Delivery times may vary depending on your location and other factors. The Dogecoin Foundation is not responsible for delays caused by customs or other third parties.</li>
+            <li>You are responsible for providing a correct shipping address. The Dogecoin Foundation will not be liable for any lost shipments due to an incorrect address.</li>
+        </ul>
+
+        <h3 id="6-returns-and-refunds-">6. <strong>Returns and Refunds</strong></h3>
+        <ul>
+            <li><strong>No Refunds:</strong> All sales of the DogeBox are final. Due to the nature of cryptocurrency transactions, we cannot offer refunds after the payment is confirmed.</li>
+            <li><strong>Warranty:</strong> The DogeBox comes with a limited warranty that covers manufacturing defects. The warranty does not cover damage caused by misuse, abuse, or normal wear and tear. If you encounter an issue with your DogeBox, please contact our support team within 30 days of receiving the product.</li>
+        </ul>
+
+        <h3 id="7-dogecoin-address-for-refunds-">7. <strong>Dogecoin Address for Refunds</strong></h3>
+        <ul>
+            <li>While refunds are generally not available, in specific cases where the Dogecoin Foundation deems a refund appropriate, the refund will be issued in Dogecoin to the address you provided at the time of purchase.</li>
+            <li>It is your responsibility to ensure that the Dogecoin address provided is correct. The Dogecoin Foundation is not liable for refunds sent to an incorrect address.</li>
+        </ul>
+
+        <h3 id="8-limitation-of-liability-">8. <strong>Limitation of Liability</strong></h3>
+        <ul>
+            <li>The Dogecoin Foundation shall not be liable for any indirect, incidental, or consequential damages arising out of or in connection with your use or inability to use the DogeBox, including but not limited to damages for loss of profits, loss of data, or other intangible losses.</li>
+            <li>The Dogecoin Foundation's total liability to you for any damages shall not exceed the amount you paid for the DogeBox.</li>
+        </ul>
+
+        <h3 id="9-governing-law-">9. <strong>Governing Law</strong></h3>
+        <p>These Terms of Service are governed by and construed in accordance with the laws of the jurisdiction in which the Dogecoin Foundation is registered, without regard to its conflict of law principles.</p>
+
+        <h3 id="10-changes-to-terms-">10. <strong>Changes to Terms</strong></h3>
+        <p>The Dogecoin Foundation reserves the right to modify these Terms of Service at any time. Any changes will be posted on this page with the updated date. Your continued use of the website and purchase of products constitutes your acceptance of any revised terms.</p>
+
+        <h3 id="11-contact-information-">11. <strong>Contact Information</strong></h3>
+        <p>If you have any questions about these Terms of Service, please contact us at:</p>
+        <p><strong>Dogecoin Foundation</strong><br>Email: preorder@dogecoin.org</p>
+        <hr>
+    </sl-details>
+  </div>
+  
+  <div>
+    <sl-checkbox name="terms" onchange="$('.checkout').show();" style="padding-top: 15px; padding-bottom: 15px;" required>
+        I read and accept the Terms and Conditions
+    </sl-checkbox>
+  </div>
+  <div id="checkout" style="display: none;">
+    <sl-alert variant="warning" open>
+      <i class="fa-solid fa-paw"></i>
+      <strong>Checkout</strong><br />
+      <div style="padding-top: 15px;">Such Product: <span id="product-doge"></span> Ð <span id="price-doge"></span></div>
+
+      <div id="shipping-select" style="display: none;">Shipping Options: <span id="shipping-doge"></span></div>
+      <div id="total-pay" style="display: none;">
+        <div style="font-size: 26px;">Total: Ð <span id="total-doge"></span></div>
+        <sl-button type="submit" style="width: -webkit-fill-available !important; min-width: 100%;">
+          <img src="img/dogecoin.png" style="max-width: 20px; margin-bottom: -5px;" alt="Dogecoin Logo">
+          Pay in Dogecoin
+        </sl-button>
+      </div>
+    </sl-alert>    
+  </div>        
+</form>
+</div>
+
+<div class="Pay" style="display: none;">
+
+  <sl-alert variant="warning" open>
+    <i class="fa-solid fa-paw"></i>
+    <strong>Much pay the exact amount below for the order to complete successfully.</strong>
+  </sl-alert>  
+
+    <div class="animation-sandbox">
+        <sl-animation name="bounce" easing="ease-in-out" duration="2000" play>
+            <div style="margin: auto; display:table; padding: 10px" id="dogeQR"></div>
+        </sl-animation>
+    </div>    
+    <div style="margin: auto;display:table;">
+        <span id="dogeAddress" class="dogeAddress"></span>
+        <sl-copy-button from="dogeAddress"></sl-copy-button>
+        <div style="text-align: center;">
+            <sl-button id="amount" variant="warning" outline></sl-button>
+        </div>
+    </div>
+</div>
+
+<sl-button style="width: -webkit-fill-available !important; min-width: 100%;" onclick="document.querySelector('.faq').show();"><i class="fa-solid fa-circle-question" style="padding-right: 10px;"></i>Frequently Asked Questions</sl-button>
+<sl-dialog class="faq">
+  <div slot="label" style="display: flex; align-items: center;">
+    <i class="fa-solid fa-circle-question" style="padding-right: 10px;"></i>
+    <strong>Frequently Asked Questions</small>
+  </div>   
+  <div style="height: 150vh; padding: 0 1rem;">
+
+    <div class="faqs-group">
+      <sl-details summary="Shipping" open>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+        aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      </sl-details>
+
+      <sl-details summary="Cancelations">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+        aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      </sl-details>
+    
+      <sl-details summary="Returns">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+        aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      </sl-details>
+    
+      <sl-details summary="Warranty">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+        aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      </sl-details>
+
+      <sl-details summary="Paying in Dogecoin">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
+        aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+      </sl-details>      
+    </div>
+
+  </div>
+</sl-dialog>
+  <style>
+    .shipping-billing-details sl-details:not(:last-of-type) {
+      margin-bottom: var(--sl-spacing-2x-small);
+    }
+  </style>
 </body>
 </html>

@@ -1,159 +1,236 @@
-$(document).ready(function() {
-    // Load content into sections using jQuery .load() method
-    $('#step1').load('step1.html', function() {
-        initializeSection1(); // Initialize events for step 1
-    });
-    $('#step2').load('step2.html', function() {
-        initializeSection2(); // Initialize events for step 2
-    });
-    $('#step3').load('step3.html', function() {
-        initializeSection3(); // Initialize events for step 3
-    });
-});
+$(document).ready(function () {
+    
+    // Such variables for SKU and price globally
+    let sku, price;
+    updateProductDetails();
+    
+    // Such function to fetch shipping options based on the selected country
+    function fetchShippingOptions(countryCode) {
+        
+        $.post('https://doge-box.com/order/vendors/shipping.php', 
+        JSON.stringify({ sku: sku, country: countryCode }), 
+        function (response) {
+            if (response.success) {
+                const shippingOptions = response.options;
+                let shippingSelectHtml = '<sl-select name="shippingOptions" id="shipping-options" placeholder="Select one">';
+    
+                shippingOptions.forEach(option => {
+                    shippingSelectHtml += `<sl-option value="${option.price_shipping_and_handling_only}">${option.label} - Ð ${option.price_shipping_and_handling_only}</sl-option>`;
+                    parseFloat($('#price-doge').text(option.price_product_only));
+                });
+    
+                shippingSelectHtml += '</sl-select>';        
+    
+                $('#shipping-doge').html(shippingSelectHtml);
+                $('#shipping-select').show();
+                $('#shipping-options').on('sl-change', function () {              
+                    updateTotalPrice();
+                    $('#total-pay').show();
+                });
+    
+                // SO calculate total price with the default shipping option
+                updateTotalPrice();
+    
+            }
+        }, 'json');
+    }
 
-function initializeSection1() {
-    // Initialize DataTable after ensuring the table is loaded
-    $('#specsTable').DataTable({
-        responsive: true,
-        paging: false,
-        searching: false,
-        info: false
-    });
 
-    // Load dialog content dynamically
-    loadDialogContent('db1', 'db1.html');
-    loadDialogContent('db2', 'db2.html');
-    loadDialogContent('db3', 'db3.html');
+    // Such function to update the total price
+    function updateTotalPrice() {
+      
+        const productPrice = parseFloat($('#price-doge').text());
+        const shippingPrice = parseFloat($('#shipping-options').val());
+        const totalPrice = productPrice + shippingPrice;
+        $('#total-doge').text(totalPrice);
+        $('#amount').html('Ð ' + totalPrice);
+    }
 
-    // Use event delegation to handle dynamically loaded content
-    $('#step1').on('click', '.db1', function() {
-        // Show dialog for db1
-        const dialog = document.querySelector('#db1-dialog');
-        if (dialog) {
-            dialog.show(); // Show the dialog using Shoelace's method
+
+    // Such function to update the total price
+    function updateTotalPrice() {      
+        const productPrice = parseFloat($('#price-doge').text());
+        const shippingPrice = parseFloat($('#shipping-options').val());
+        const totalPrice = productPrice + shippingPrice;
+        $('#total-doge').text(totalPrice);
+        $('#amount').html('Ð ' + totalPrice);
+    }
+
+    // Much when country is changed, fetch shipping options
+    $('sl-select[name="country"]').on('sl-change', function () {
+        const selectedCountry = $(this).val();
+        if (selectedCountry) {
+          $('#total-pay').hide();
+            fetchShippingOptions(selectedCountry);
         }
     });
 
-    $('#step1').on('click', '#btn2500-in', function() { 
-        selectAmount(2500); 
-        const dialog = document.querySelector('#db1-dialog');
-        if (dialog) {
-            dialog.hide(); // Hide the dialog using Shoelace's method
+    // So automatically expand "Billing Details" section if Dogecoin address is entered
+    $('#dogeadd').on('input', function () {
+          if ($(this).val().trim() !== '') {
+              // Expand the Billing Details section
+              document.querySelectorAll('sl-details')[1].open = true;
+  
+          }
+    });
+  
+    $('sl-checkbox[name="terms"]').on('sl-change', function() {
+        if (this.checked) {
+            $('#checkout').show();  // Show checkout section
+        } else {
+            $('#checkout').hide();  // Optionally hide checkout section
         }
     });
 
-    $('#step1').on('click', '.db2', function() {
-        // Show dialog for db2
-        const dialog = document.querySelector('#db2-dialog');
-        if (dialog) {
-            dialog.show(); // Show the dialog using Shoelace's method
-        }
-    });
-
-    $('#step1').on('click', '#btn3500-in', function() { 
-        selectAmount(3500); 
-        const dialog = document.querySelector('#db2-dialog');
-        if (dialog) {
-            dialog.hide(); // Hide the dialog using Shoelace's method
-        }
-    });
-
-    $('#step1').on('click', '.db3', function() {
-        // Show dialog for db3
-        const dialog = document.querySelector('#db3-dialog');
-        if (dialog) {
-            dialog.show(); // Show the dialog using Shoelace's method
-        }
-    });
-
-    $('#step1').on('click', '#btn4000-in', function() { 
-        selectAmount(4000); 
-        const dialog = document.querySelector('#db3-dialog');
-        if (dialog) {
-            dialog.hide(); // Hide the dialog using Shoelace's method
-        }
-    });      
-
-    // Handle button clicks for other elements
-    $(document).on('click', '#btn2500', function() { selectAmount(2500); });
-    $(document).on('click', '#btn3500', function() { selectAmount(3500); });
-    $(document).on('click', '#btn4000', function() { selectAmount(4000); });
-}
-
-function initializeSection2() {
-    // Load dialog content dynamically for step 2
-    loadDialogContent('db1-l', 'db1.html');
-    loadDialogContent('db2-l', 'db2.html');
-    loadDialogContent('db3-l', 'db3.html');
-
-    // Initialize other elements or events for step 2
     $('.input-validation-required').on('submit', function(event) {
-        event.preventDefault();
+        event.preventDefault(); // Prevent the default form submission
+
         if (this.reportValidity()) {
-            sendtoGigaWallet(); // Call async function
+            const dogecoinAdd = $('#dogeadd').val();
+            // Thanks to https://x.com/patricklodder we can check if the DogeAddress is valid
+            if (!bs58caddr.validateCoinAddress('DOGE', dogecoinAdd)) {
+                showAlert('warning', 'So Sad', 'Sorry Shibe, Doge Address is not valid!');
+                return;
+            }
+
+            // Address is valid, proceed with form submission
+            sendtoGigaWallet();
         }
     });
-}
 
-function loadDialogContent(containerId, fileName) {
-    fetch(fileName)
-        .then(response => response.text())
-        .then(data => {
-            $('#' + containerId).html(data);
-        })
-        .catch(error => console.error('Error loading file:', error));
-}
+    // a Bub on Mobile Google Chrome only, tryng to debug
+    async function sendtoGigaWallet() {
 
-let selectedAmount = 0;
-function selectAmount(amount) {
-    selectedAmount = amount;
-    $('#step1').removeClass('active');
-    $('#step2').addClass('active');
-}
-
-async function sendtoGigaWallet() {
     const form = document.getElementById('PayinDoge');
+
     if (!form.reportValidity()) {
         return;
     }
 
-    const formData = new FormData(form);
-    formData.append('amount', selectedAmount);
+    const formData = {
+        sku: sku,
+        name: $('sl-input[name="name"]').val(),
+        email: $('sl-input[name="email"]').val(),
+        country: $('sl-select[name="country"]').val(),
+        address: $('sl-input[name="address"]').val(),
+        postalCode: $('sl-input[name="postalCode"]').val(),
+        dogeAddress: $('sl-input[name="dogeAddress"]').val(),
+        bname: $('sl-input[name="bname"]').val(),
+        bemail: $('sl-input[name="bemail"]').val(),
+        bcountry: $('sl-select[name="bcountry"]').val(),
+        baddress: $('sl-input[name="baddress"]').val(),
+        bpostalCode: $('sl-input[name="bpostalCode"]').val(),
+        amount: $('#total-doge').text()
+    };
 
-    try {
-        const response = await fetch('https://what-is-dogecoin.com/foundation/dogebox/gigawallet.php', {
-            method: 'POST', // Use POST instead of GET
-            body: formData
+
+    $.post(
+        'https://doge-box.com/order/vendors/gigawallet-api.php',
+        JSON.stringify(formData),
+        function(response) {
+            // Check if response contains the required data
+            if (response && response.GigaQR && response.PaytoDogeAddress) {
+                $('#dogeQR').html(response.GigaQR);
+                $('#dogeAddress').text(response.PaytoDogeAddress);
+                $('#PayinDoge').hide();
+                $('.Pay').show();
+            } else {
+                showAlert('warning', 'So Sad', 'Sorry shibe, there was a problem with the response, try again!');
+            }
+        },
+        'json' // Expecting the response in JSON format
+    ).fail(function(jqXHR, textStatus, errorThrown) {
+        // Handle the error
+        console.error('Error:', textStatus, errorThrown);
+        showAlert('warning', 'So Sad', 'Sorry shibe, there was a problem, try again!');
+    });
+
+}
+
+    // Much function to fetch SKU and price from URL parameters and update the DOM
+    function updateProductDetails() {
+
+        // URL to fetch countries data
+        const countriesUrl = 'https://doge-box.com/order/vendors/countries.php';
+    
+        $.getJSON(countriesUrl, function (data) {
+            if (data.success) {
+                const countries = data.countries;
+    
+                function populateSelects() {
+                    const countryOptions = countries.map(country =>
+                        `<sl-option value="${country.code}">${country.name}</sl-option>`
+                    ).join('');
+
+                    $('sl-select[name="country"]').html(countryOptions);
+                    $('sl-select[name="bcountry"]').html(countryOptions);
+                }
+    
+                // So populate selects
+                populateSelects();
+            } else {          
+                console.error('Failed to fetch countries data');
+            }
+        }).fail(function () {
+            console.error('Error fetching countries data');
         });
 
-        if (response.ok) {              
-            const data = await response.json();
-            $('#step2').removeClass('active');
-            $('#step3').addClass('active');
-            $('#amount').text(selectedAmount);
-            $('#dogeAddress').val(data.id);
-        } else {
-            showAlert('warning', 'So Sad', 'Sorry shibe, there was a problem, try again!');
+
+        // Such get the URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Fetch 'sku' and 'price' parameters from the URL
+        sku = urlParams.get('sku') || 'b0rk'; // fallback to 'b0rk' if not found
+        price = urlParams.get('price') || '0'; // fallback to '0' if not found
+    
+        // Update the <span> elements if the values exist
+        if (sku) {
+            document.getElementById('product-doge').textContent = sku;
         }
-    } catch (error) {
-        console.error('Error:', error);
-        showAlert('warning', 'So Sad', 'Sorry shibe, there was a problem, try again!');
+        if (price) {
+            document.getElementById('price-doge').textContent = price;
+        }
     }
-}
 
-function initializeSection3() {
-    // Placeholder for step 3 initialization on Gigawallet payment details
-}
+    document.getElementById('sameAsShipping').addEventListener('sl-change', function(event) {
+        const shippingInputs = {
+            name: document.querySelector('sl-input[name="name"]').value,
+            email: document.querySelector('sl-input[name="email"]').value,
+            country: document.querySelector('sl-select[name="country"]').value,
+            address: document.querySelector('sl-input[name="address"]').value,
+            postalCode: document.querySelector('sl-input[name="postalCode"]').value
+        };
 
-// Show Much sad on error
-function showAlert(icon, title, html) {
-    Swal.fire({
-        icon: icon,
-        title: title,
-        background: '#000000',
-        showConfirmButton: true,
-        confirmButtonColor: '#580DA9',
-        html: `<img src="img/sad_doge.gif" style="border-radius: 20px"><br>${html}`,
-        customClass: { popup: 'dogebox-swal' }                       
+        if (event.target.checked) {
+            document.querySelector('sl-input[name="bname"]').value = shippingInputs.name;
+            document.querySelector('sl-input[name="bemail"]').value = shippingInputs.email;
+            document.querySelector('sl-select[name="bcountry"]').value = shippingInputs.country;
+            document.querySelector('sl-input[name="baddress"]').value = shippingInputs.address;
+            document.querySelector('sl-input[name="bpostalCode"]').value = shippingInputs.postalCode;
+        }
     });
-}
+
+    const dialog = document.querySelector('.dialog-scrolling');
+    const container = document.querySelector('.shipping-billing-details');
+    const containerfaqs = document.querySelector('.faqs-group');
+
+    // Close all other details when one is shown
+    containerfaqs.addEventListener('sl-show', event => {
+      if (event.target.localName === 'sl-details') {
+        [...containerfaqs.querySelectorAll('sl-details')].map(details => (details.open = event.target === details));
+      }
+    });    
+    
+    // Show Much sad on error
+    function showAlert(icon, title, html) {
+        Swal.fire({
+            icon: icon,
+            title: title,
+            background: '#000000',
+            showConfirmButton: true,
+            confirmButtonColor: '#580DA9',
+            html: `<img src="img/sad_doge.gif" style="border-radius: 20px; max-width:100%"><br>${html}`,
+            customClass: { popup: 'dogebox-swal' }                       
+        });
+    }
+});
