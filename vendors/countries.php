@@ -1,7 +1,9 @@
 <?php
-header('Access-Control-Allow-Origin: *');
+//header('Access-Control-Allow-Origin: *');
+include("../conf.php");
+
 // URL of the JSON data
-$url = 'http://localhost:3000/shipping/countries';
+$url = $config["shipperHost"].'/shipping/countries';
 
 // Fetch the JSON data from the URL
 $response = file_get_contents($url);

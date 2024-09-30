@@ -1,12 +1,17 @@
-<?php
+# DogeBox Order Page
 
-header('Access-Control-Allow-Origin: *');
-//ini_set('display_errors', 1);
+###Requeirments:
+- PHP 8.X
+- MariaDB or MySQL (Latest)
+- SMTP Server
+- GigaWallet Server
+- Shipper Server (https://github.com/dogeorg/shipper)
 
-// GigaWallet Server configuration
-// Attenttion **
-// Subscribe on GigaWallet for PAYMENT_RECEIVED to /callback/ to update payments
-// Attenttion **
+ ### Configuration needed on conf.php to connect to all servers 
+ ### Subscribe on GigaWallet for PAYMENT_RECEIVED to URL/callback/ to update payments
+
+```
+// GigaWallet Server Configuration
 $config["gigawallet"] = 1; // enable GigaWallet
 $config["GigaServer"][0] = "localhost"; // admin server
 $config["GigaPort"][0] = 420; // admin server port
@@ -32,3 +37,5 @@ $config["email_stmp"] = "mail.doge-box.com";
 
 // Shipper Server Configuration
 $config["shipperHost"] = 'http://localhost:3000';
+
+```

@@ -1,7 +1,9 @@
 <?php
-header('Access-Control-Allow-Origin: *');
+//header('Access-Control-Allow-Origin: *');
+include("../conf.php");
+
 // URL to send the POST request to
-$url = 'http://localhost:3000/shipping/calc';
+$url = $config["shipperHost"].'/shipping/calc';
 
 // Read and decode the incoming JSON data from the request body
 $incomingData = file_get_contents('php://input');
