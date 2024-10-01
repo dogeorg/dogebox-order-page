@@ -7,13 +7,12 @@ $(document).ready(function () {
     // Such function to fetch shipping options based on the selected country
     function fetchShippingOptions(countryCode) {
         
-        $.post('https://doge-box.com/order/vendors/shipping.php', 
+        $.post('vendors/shipper-api.php', 
         JSON.stringify({ sku: sku, country: countryCode }), 
         function (response) {
             if (response.success) {
                 const shippingOptions = response.options;
                 let shippingSelectHtml = '<sl-select name="shippingOptions" id="shipping-options" placeholder="Select one">';
-    
                 shippingOptions.forEach(option => {
                     shippingSelectHtml += `<sl-option value="${option.price_shipping_and_handling_only}">${option.label} - Ð ${option.price_shipping_and_handling_only}</sl-option>`;
                     parseFloat($('#price-doge').text(option.price_product_only));
@@ -34,7 +33,6 @@ $(document).ready(function () {
             }
         }, 'json');
     }
-
 
     // Such function to update the total price
     function updateTotalPrice() {
@@ -123,9 +121,8 @@ $(document).ready(function () {
         amount: $('#total-doge').text()
     };
 
-
     $.post(
-        'https://doge-box.com/order/vendors/gigawallet-api.php',
+        'vendors/gigawallet-api.php',
         JSON.stringify(formData),
         function(response) {
             // Check if response contains the required data
@@ -151,7 +148,7 @@ $(document).ready(function () {
     function updateProductDetails() {
 
         // URL to fetch countries data
-        const countriesUrl = 'https://doge-box.com/order/vendors/countries.php';
+        const countriesUrl = 'vendors/shipper-api.php';
     
         $.getJSON(countriesUrl, function (data) {
             if (data.success) {

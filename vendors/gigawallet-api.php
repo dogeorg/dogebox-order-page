@@ -10,11 +10,62 @@ class GigaWalletBridge {
         $this->config = $config;
     }
 
+    // Test DB
+    public function testDbConnection() {
+        
+        try {
+            $conn = new mysqli($this->config["dbHost"], $this->config["dbUser"], $this->config["dbPass"], $this->config["dbName"], $this->config["dbPort"]);
+    
+            // Check connection
+            if ($conn->connect_error) {
+                echo " - DB Test Failled\n";
+            }else{
+                echo " - DB Test Passed ✅\n";
+            }
+    
+        } catch (Exception $e) {
+            echo " - DB Test Failled ❌\n";
+        }
+        
+    }
+
+    // Test GigaWallet
+    public function testGigaWallet() {
+        
+        try {
+            $gigawallet = json_decode($this->GetInvoices('suchdummy',null), true);
+            if (isset($gigawallet['error'])) {
+                echo " - GigaWallet Test Passed ✅\n";
+            } else {
+                echo " - GigaWallet Test Failled ❌\n";
+            }
+        } catch (Exception $e) {
+            echo " - GigaWallet Test Failled ❌\n";
+        }
+
+    }       
+
+    // Test SMTP
+    public function testtSMTPConnection() {
+
+        try {
+            $email = $this->mailx("test@dogecoin.com",$this->config["email_from"],$this->config["mail_name_from"],$this->config["email_from"],$this->config["email_password"],$this->config["email_port"],$this->config["email_stmp"],"test","test");
+            if ($email != "Error") {
+                echo " - SMTP Test Passed ✅\n";
+            } else {
+                echo " - SMTP Test Failled ❌\n";
+            }
+        } catch (Exception $e) {
+            echo " - SMTP Test Failled ❌\n";
+        }
+
+    }     
+
     // Connects to MariaDB
     public function getDbConnection() {
     
         try {
-            $conn = new mysqli($this->config["dbhost"], $this->config["dbuser"], $this->config["dbpass"], $this->config["dbname"], $this->config["dbport"]);
+            $conn = new mysqli($this->config["dbHost"], $this->config["dbUser"], $this->config["dbPass"], $this->config["dbName"], $this->config["dbPort"]);
     
             // Check connection
             if ($conn->connect_error) {
@@ -26,7 +77,7 @@ class GigaWalletBridge {
             die("Connection failed: " . $e->getMessage());
         }
     }
-    
+
     // Insert Shibe
     public function insertShibe($name, $email, $country, $address, $postalCode, $dogeAddress, $bname, $bemail, $bcountry, $baddress, $bpostalCode, $amount, $paytoDogeAddress, $sku) {
         $conn = $this->getDbConnection();
@@ -40,7 +91,7 @@ class GigaWalletBridge {
 
 
 
-        $logo = "<img src='https://doge-box.com/order/img/dogebox-email.png' style='width:100%; max-width: 150px' alet='dogebox' />";
+        $logo = "<img src='".$this->config["orderHost"]."img/dogebox-email.png' style='width:100%; max-width: 150px' alet='dogebox' />";
         $mail_subject = "Much Thanks for your order";
 
         $mail_message = <<<EOD
@@ -268,6 +319,9 @@ public function mailx($email_to,$email_from,$email_from_name,$email_username,$em
     $mail->Body = $email_body;
 
      if(!$mail->Send()) {
+        if (isset($this->config["tests"])){
+            return "Error";
+        }
       //echo "Mailer Error: " . $mail->ErrorInfo;
      } else {
       //echo "Message has been sent";
@@ -279,77 +333,68 @@ public function mailx($email_to,$email_from,$email_from_name,$email_username,$em
 
 $G = new GigaWalletBridge($config);
 
-// we can use callback subscribe on GigaWallet for PAYMENT_RECEIVED to /callback/ or use a cron task
-if (isset($_GET["cron"])) {
+if (!isset($config["tests"])){
+    // Check if the request method is POST
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Todo  a function to fetch MariaDB data of all orders to check only the unpaid
-    // Create a cron task that sends a GET cron = 1 and paytoDogeAddress detected by GigaWallet
-    $G->updateDogePaidStatus($_GET["paytoDogeAddress"])
+        // Read the raw POST data from the request body
+        $inputJSON = file_get_contents('php://input');
+        $input = json_decode($inputJSON, true); // Decode the JSON request to an associative array
 
-}
+        // Initialize an empty response array
+        $response = array();
 
-// Check if the request method is POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Check if 'amount' is set and get its value
+        if (isset($input['amount'])) {
+            $amount = htmlspecialchars($input['amount']); // Sanitize the input
+        } else {
+            $response['error'] = 'Amount not provided';
+        }
 
-    // Read the raw POST data from the request body
-    $inputJSON = file_get_contents('php://input');
-    $input = json_decode($inputJSON, true); // Decode the JSON request to an associative array
+        // Check if 'dogeAddress' is set and get its value
+        if (isset($input['dogeAddress'])) {
+            $dogeAddress = htmlspecialchars($input['dogeAddress']); // Sanitize the input
+        } else {
+            $response['error'] = 'Doge Address not provided';
+        }
 
-    // Initialize an empty response array
-    $response = array();
+        if (!isset($response['error'])) {
+            // Create Account
+            $foreign_id = $dogeAddress;
+            $GigaAccountCreate = json_decode($G->account($foreign_id, $config["payout_address"], 0, 0, "POST")); // create shibe
 
-    // Check if 'amount' is set and get its value
-    if (isset($input['amount'])) {
-        $amount = htmlspecialchars($input['amount']); // Sanitize the input
+            // Get Account
+            $GigaAccountGet = json_decode($G->account($foreign_id, NULL, NULL, NULL, "GET"));
+
+            // Create Invoice
+            $data["required_confirmations"] = 1; // number of confirmations to validate payment
+            $i = 0; // item number 0
+            $data["items"][$i]["type"] = "item"; // item type (item/tax/fee/shipping/discount/donation)
+            $data["items"][$i]["name"] = $input['sku']; // item name
+            $data["items"][$i]["sku"] = $input['sku']; // item sku
+            $data["items"][$i]["value"] = (float)$amount; // item value
+            $data["items"][$i]["quantity"] = 1; // item quantity
+
+            $GigaInvoiceCreate = json_decode($G->invoice($GigaAccountGet->foreign_id, $data)); // create invoice
+
+            // Get invoice
+            $GigaInvoiceGet = json_decode($G->GetInvoice($GigaAccountGet->foreign_id, $GigaInvoiceCreate->id));
+            $response['PaytoDogeAddress'] = $GigaInvoiceCreate->id;
+
+            // Insert Shibe
+            $G->insertShibe($input['name'], $input['email'], $input['country'], $input['address'], $input['postalCode'], $input['dogeAddress'], $input['bname'], $input['bemail'], $input['bcountry'], $input['baddress'], $input['bpostalCode'], (float)$amount, $response['PaytoDogeAddress'], $input['sku']);
+
+            // Get QR
+            $GigaQR = base64_encode($G->qr($GigaAccountGet->foreign_id, $GigaInvoiceGet->id, "000000", "ffffff"));
+            $response['GigaQR'] = '<a href="dogecoin:' . $response['PaytoDogeAddress'] . '?amount=' . (float)$amount . '" target="_blank"><doge-qr address="' . $response['PaytoDogeAddress'] . '" amount=' . (float)$amount . ' theme="such-doge"></doge-qr></a>';
+        }
+
+        // Send a JSON response
+        header('Content-Type: application/json');
+        echo json_encode($response);
     } else {
-        $response['error'] = 'Amount not provided';
+        // Respond with an error if the request method is not POST
+        header('Content-Type: application/json');
+        echo json_encode(['error' => 'Invalid request method']);
     }
-
-    // Check if 'dogeAddress' is set and get its value
-    if (isset($input['dogeAddress'])) {
-        $dogeAddress = htmlspecialchars($input['dogeAddress']); // Sanitize the input
-    } else {
-        $response['error'] = 'Doge Address not provided';
-    }
-
-    if (!isset($response['error'])) {
-        // Create Account
-        $foreign_id = $dogeAddress;
-        $GigaAccountCreate = json_decode($G->account($foreign_id, payout_address: $this->config["payout_address"], 0, 0, "POST")); // create shibe
-
-        // Get Account
-        $GigaAccountGet = json_decode($G->account($foreign_id, NULL, NULL, NULL, "GET"));
-
-        // Create Invoice
-        $data["required_confirmations"] = 1; // number of confirmations to validate payment
-        $i = 0; // item number 0
-        $data["items"][$i]["type"] = "item"; // item type (item/tax/fee/shipping/discount/donation)
-        $data["items"][$i]["name"] = $input['sku']; // item name
-        $data["items"][$i]["sku"] = $input['sku']; // item sku
-        $data["items"][$i]["value"] = (float)$amount; // item value
-        $data["items"][$i]["quantity"] = 1; // item quantity
-
-        $GigaInvoiceCreate = json_decode($G->invoice($GigaAccountGet->foreign_id, $data)); // create invoice
-
-        // Get invoice
-        $GigaInvoiceGet = json_decode($G->GetInvoice($GigaAccountGet->foreign_id, $GigaInvoiceCreate->id));
-        $response['PaytoDogeAddress'] = $GigaInvoiceCreate->id;
-
-        // Insert Shibe
-        $G->insertShibe($input['name'], $input['email'], $input['country'], $input['address'], $input['postalCode'], $input['dogeAddress'], $input['bname'], $input['bemail'], $input['bcountry'], $input['baddress'], $input['bpostalCode'], (float)$amount, $response['PaytoDogeAddress'], $input['sku']);
-
-        // Get QR
-        $GigaQR = base64_encode($G->qr($GigaAccountGet->foreign_id, $GigaInvoiceGet->id, "000000", "ffffff"));
-        $response['GigaQR'] = '<a href="dogecoin:' . $response['PaytoDogeAddress'] . '?amount=' . (float)$amount . '" target="_blank"><doge-qr address="' . $response['PaytoDogeAddress'] . '" amount=' . (float)$amount . ' theme="such-doge"></doge-qr></a>';
-    }
-
-    // Send a JSON response
-    header('Content-Type: application/json');
-    echo json_encode($response);
-} else {
-    // Respond with an error if the request method is not POST
-    header('Content-Type: application/json');
-    echo json_encode(['error' => 'Invalid request method']);
 }
-
-?>

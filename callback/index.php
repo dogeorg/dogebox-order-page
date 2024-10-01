@@ -38,13 +38,13 @@ if ($data !== null && isset($data['EventType'])) {
             //$message->items; // items
             // Loop through the "items" array
             foreach ($message->items as $item) {
-                $tem->type; // type
-                $tem->name; // name
-                $tem->sku; // sku
-                $tem->description; // description
-                $tem->value; // value
-                $tem->quantity; // quantity
-                $tem->image_link; // image_link
+                $item->type; // type
+                $item->name; // name
+                $item->sku; // sku
+                $item->description; // description
+                $item->value; // value
+                $item->quantity; // quantity
+                $item->image_link; // image_link
             };
             $message->confirmations; // block confirmations needed
             $message->created; // date created
@@ -90,6 +90,5 @@ if ($data !== null && isset($data['EventType'])) {
 }
 function fetchme ($sub,$mess){
     // we update the invoice status to paid
-    $G->updateDogePaidStatus($mess)
+    $G->updateDogePaidStatus($mess);
 }
-?>
