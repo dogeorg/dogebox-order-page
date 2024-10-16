@@ -113,6 +113,7 @@ $(document).ready(function () {
         address: $('sl-input[name="address"]').val(),
         postalCode: $('sl-input[name="postalCode"]').val(),
         dogeAddress: $('sl-input[name="dogeAddress"]').val(),
+        size: $('sl-select[name="size"]').val(),
         bname: $('sl-input[name="bname"]').val(),
         bemail: $('sl-input[name="bemail"]').val(),
         bcountry: $('sl-select[name="bcountry"]').val(),
@@ -179,10 +180,17 @@ $(document).ready(function () {
         // Fetch 'sku' and 'price' parameters from the URL
         sku = urlParams.get('sku') || 'b0rk'; // fallback to 'b0rk' if not found
         price = urlParams.get('price') || '0'; // fallback to '0' if not found
-    
+        
         // Update the <span> elements if the values exist
         if (sku) {
+            
             document.getElementById('product-doge').textContent = sku;
+            // Show size selection only if SKU is 'b0rk'
+            if (sku === "b0rk") {
+                document.getElementById('size-select').style.display = 'block';
+            } else {
+                document.getElementById('size-select').style.display = 'none';
+            }            
         }
         if (price) {
             document.getElementById('price-doge').textContent = price;

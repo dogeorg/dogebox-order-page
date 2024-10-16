@@ -76,7 +76,7 @@
       <sl-select placeholder="Country" name="bcountry" required>
           <!-- List of countries -->
       </sl-select>
-  
+        
       <sl-input placeholder="Address" name="baddress" clearable required></sl-input>
       <sl-input placeholder="Postal Code" name="bpostalCode" clearable required></sl-input>
     </sl-details>
@@ -150,9 +150,34 @@
     <sl-alert variant="warning" open>
       <i class="fa-solid fa-paw"></i>
       <strong>Checkout</strong><br />
-      <div style="padding-top: 15px;">Such Product: <span id="product-doge"></span> Ð <span id="price-doge"></span></div>
 
-      <div id="shipping-select" style="display: none;">Shipping Options: <span id="shipping-doge"></span></div>
+      
+      <div style="padding-top: 15px;"><code>> Such Product:</code> <b><span id="product-doge"></span> Ð <span id="price-doge"></span></b></div>
+
+    <div id="size-select" style="display: none;"><code>> Full B0RK T-Shirt:</code> 
+      <span id="size-doge">
+        <sl-select placeholder="Size" name="size">
+          <sl-option value="S">S</sl-option>
+          <sl-option value="M">M</sl-option>
+          <sl-option value="L">L</sl-option>
+          <sl-option value="XL">XL</sl-option>
+          <sl-option value="XXL">XXL</sl-option>
+        </sl-select>        
+      </span>
+    <a href="#" onclick="document.querySelector('.suchSize').show();" >such t-shirt size chart</a>
+    </div>
+
+    <sl-dialog class="suchSize">
+      <div slot="label" style="display: flex; align-items: center;">
+        <i class="fa-solid fa-circle-question" style="padding-right: 10px;"></i>
+        <strong>Such T-Shirt Size Chart</small>
+      </div>   
+      <div style="padding: 0 1rem;">
+        <img src="img/such-size-chart.png" style=" width: 100%; height: auto;">
+      </div>
+    </sl-dialog>    
+
+      <div id="shipping-select" style="display: none;"><code>> Shipping Options:</code> <span id="shipping-doge"></span></div>
       <div id="total-pay" style="display: none;">
         <div style="font-size: 26px;">Total: Ð <span id="total-doge"></span></div>
         <sl-button type="submit" style="width: -webkit-fill-available !important; min-width: 100%;">

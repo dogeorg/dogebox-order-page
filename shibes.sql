@@ -16,6 +16,7 @@ CREATE TABLE `shibes` (
   `address` varchar(255) DEFAULT NULL,
   `postalCode` varchar(255) DEFAULT NULL,
   `dogeAddress` varchar(255) DEFAULT NULL,
+  `size` varchar(255) DEFAULT NULL,
   `bname` varchar(255) DEFAULT NULL,
   `bemail` varchar(255) DEFAULT NULL,
   `bcountry` varchar(255) DEFAULT NULL,
