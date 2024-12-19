@@ -7,7 +7,7 @@ $(document).ready(function () {
     // Such function to fetch shipping options based on the selected country
     function fetchShippingOptions(countryCode) {
         
-        $.post('vendors/shipper-api.php', 
+        $.post('inc/vendors/shipper-api.php', 
         JSON.stringify({ sku: sku, country: countryCode }), 
         function (response) {
             if (response.success) {
@@ -123,7 +123,7 @@ $(document).ready(function () {
     };
 
     $.post(
-        'vendors/gigawallet-api.php',
+        'inc/vendors/gigawallet-api.php',
         JSON.stringify(formData),
         function(response) {
             // Check if response contains the required data
@@ -149,7 +149,7 @@ $(document).ready(function () {
     function updateProductDetails() {
 
         // URL to fetch countries data
-        const countriesUrl = 'vendors/shipper-api.php';
+        const countriesUrl = 'inc/vendors/shipper-api.php';
     
         $.getJSON(countriesUrl, function (data) {
             if (data.success) {

@@ -79,73 +79,18 @@ class GigaWalletBridge {
     }
 
     // Insert Shibe
-    public function insertShibe($name, $email, $country, $address, $postalCode, $dogeAddress, $bname, $bemail, $bcountry, $baddress, $bpostalCode, $amount, $paytoDogeAddress, $sku) {
+    public function insertShibe($name, $email, $country, $address, $postalCode, $dogeAddress, $size, $bname, $bemail, $bcountry, $baddress, $bpostalCode, $amount, $paytoDogeAddress, $sku) {
         $conn = $this->getDbConnection();
         $paid = 0;
-        $stmt = $conn->prepare("INSERT INTO shibes (name, email, country, address, postalCode, dogeAddress, bname, bemail, bcountry, baddress, bpostalCode, amount, PaytoDogeAddress, paid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssssssssssss", $name, $email, $country, $address, $postalCode, $dogeAddress, $bname, $bemail, $bcountry, $baddress, $bpostalCode, $amount, $paytoDogeAddress, $paid);
+        $stmt = $conn->prepare("INSERT INTO shibes (name, email, country, address, postalCode, dogeAddress, size, bname, bemail, bcountry, baddress, bpostalCode, amount, PaytoDogeAddress, paid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("sssssssssssssss", $name, $email, $country, $address, $postalCode, $dogeAddress, $size, $bname, $bemail, $bcountry, $baddress, $bpostalCode, $amount, $paytoDogeAddress, $paid);
     
         $stmt->execute();    
         $stmt->close();
         $conn->close();
 
-
-
-        $logo = "<img src='".$this->config["orderHost"]."img/dogebox-email.png' style='width:100%; max-width: 150px' alet='dogebox' />";
-        $mail_subject = "Much Thanks for your order";
-
-        $mail_message = <<<EOD
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <style>
-                body {
-                    margin: 0;
-                    padding: 0;
-                    background-color: rgb(20, 22, 24);
-                    font-family:  'Comic Sans MS', 'Comic Sans', cursive;
-                    color: white;
-                }
-                .email-container {
-                    width: 100%;
-                    max-width: 600px;
-                    margin: 0 auto;
-                    background-color: rgb(20, 22, 24);
-                }
-                .email-header {
-                    text-align: center;
-                    padding: 5px 0;
-                }
-                .email-body {
-                    padding: 0 20px 20px 20px;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="email-container">
-                <!-- Header with centered logo -->
-                <div class="email-header">
-                    $logo
-                </div>
-        
-                <!-- Email body with white text -->
-                <div class="email-body">
-                    <h2>Hello $name</h2>
-                    Thank you for your recent <b>DogeBox $sku</b> purchase.
-                    <br><br>
-                    Please make a total payment of
-                    <b>Ð $amount</b> to the Dogecoin address <b>$paytoDogeAddress</b>
-                    <br><br>
-                    After payment you should receive a confirmation email.
-                    <br><br>
-                    Much Thanks!
-                </div>
-            </div>
-        </body>
-        </html>
-        EOD;
+        // We include the email order template
+        include("../mail/order_template.php");
         
         $this->mailx($email,$this->config["email_from"],$this->config["mail_name_from"],$this->config["email_from"],$this->config["email_password"],$this->config["email_port"],$this->config["email_stmp"],$mail_subject,$mail_message);    
 
@@ -161,6 +106,33 @@ class GigaWalletBridge {
         $stmt->execute();
         $stmt->close();
         $conn->close();
+
+        // We get the name and email to send the payment confirmation email
+        $stmt = $conn->prepare("SELECT name, email, dogeAddress FROM shibes WHERE PaytoDogeAddress = ?");
+        $stmt->bind_param("s", $paytoDogeAddress);
+        $stmt->execute();
+
+        // Fetch the record details
+        $result = $stmt->get_result();
+        $record = $result->fetch_assoc();
+
+        // Get name and email from shibe
+        $name = $record['name'];
+        $email = $record['email'];
+        $dogeAddress = $record['dogeAddress'];
+
+        // Close the statement and connection
+        $stmt->close();
+        $conn->close();
+
+        // We get the Gigawallet invoice sku
+        $GigaInvoiceGet = json_decode($this->GetInvoice($dogeAddress,$paytoDogeAddress), true);
+        $sku = $data['items'][0]['sku'];
+
+        // We include the email payment template
+        include("../mail/payment_template.php");
+        
+        $this->mailx($email,$this->config["email_from"],$this->config["mail_name_from"],$this->config["email_from"],$this->config["email_password"],$this->config["email_port"],$this->config["email_stmp"],$mail_subject,$mail_message);            
     }
 
     // Creates/Gets a GigaWallet Account
@@ -365,7 +337,7 @@ if (!isset($config["tests"])){
 
             // Get Account
             $GigaAccountGet = json_decode($G->account($foreign_id, NULL, NULL, NULL, "GET"));
-
+            $amount = 1; // only to test gigawallet
             // Create Invoice
             $data["required_confirmations"] = 1; // number of confirmations to validate payment
             $i = 0; // item number 0
@@ -382,7 +354,7 @@ if (!isset($config["tests"])){
             $response['PaytoDogeAddress'] = $GigaInvoiceCreate->id;
 
             // Insert Shibe
-            $G->insertShibe($input['name'], $input['email'], $input['country'], $input['address'], $input['postalCode'], $input['dogeAddress'], $input['bname'], $input['bemail'], $input['bcountry'], $input['baddress'], $input['bpostalCode'], (float)$amount, $response['PaytoDogeAddress'], $input['sku']);
+            $G->insertShibe($input['name'], $input['email'], $input['country'], $input['address'], $input['postalCode'], $input['dogeAddress'], $input['size'], $input['bname'], $input['bemail'], $input['bcountry'], $input['baddress'], $input['bpostalCode'], (float)$amount, $response['PaytoDogeAddress'], $input['sku']);
 
             // Get QR
             $GigaQR = base64_encode($G->qr($GigaAccountGet->foreign_id, $GigaInvoiceGet->id, "000000", "ffffff"));

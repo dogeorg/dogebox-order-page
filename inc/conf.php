@@ -7,7 +7,7 @@ $config['orderHost'] = 'https://localhost/order/';
 
 // GigaWallet Server configuration
 // Attenttion **
-// Subscribe on GigaWallet for PAYMENT_RECEIVED to /callback/ to update payments
+// Subscribe on GigaWallet for INV_TOTAL_PAYMENT_DETECTED to /inc/callback/ to update payments
 // Attenttion **
 $config['GigaServer'][0] = 'localhost'; // admin server
 $config['GigaPort'][0] = 420; // admin server port

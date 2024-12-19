@@ -9,7 +9,9 @@
 
  ### Import shibes.sql to the MariaDb/MySQL
  ### Configuration needed on conf.php to connect to all servers 
- ### Subscribe on GigaWallet for PAYMENT_RECEIVED to URL/callback/ to update payments
+ ### Subscribe on GigaWallet for INV_TOTAL_PAYMENT_DETECTED to URL/callback/ to update payments
+
+ ### Open inc/conf.php and set:
 
 ```
 // Order host URL
@@ -17,7 +19,7 @@ $config['orderHost'] = 'https://localhost/order/';
 
 // GigaWallet Server configuration
 // Attenttion **
-// Subscribe on GigaWallet for PAYMENT_RECEIVED to /callback/ to update payments
+// Subscribe on GigaWallet for INV_TOTAL_PAYMENT_DETECTED to /inc/callback/ to update payments
 // Attenttion **
 $config['GigaServer'][0] = 'localhost'; // admin server
 $config['GigaPort'][0] = 420; // admin server port
@@ -47,4 +49,4 @@ $config['shipperHost'] = 'http://localhost:3000';
 
 ```
 
-###To run a test open your browser on https://localhost/tests/
+###To run a test open your browser on https://localhost/inc/tests/
