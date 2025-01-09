@@ -2,6 +2,57 @@ $(document).ready(function () {
     
     // Such variables for SKU and price globally
     let sku, price;
+    sku = 'b0rk';
+    const selectElement = document.getElementById('dogebox-select');
+    const boxRam = document.getElementById('boxram');
+    const boxBlock = document.getElementById('boxblock');
+  
+    selectElement.addEventListener('sl-change', () => {
+      const selectedValue = selectElement.value;
+      const bcountrySelect = document.querySelector('sl-select[name="bcountry"]');
+      const countrySelect = document.querySelector('sl-select[name="country"]');
+
+      // We change the DogeBox details
+      if (selectedValue === 'standard') {
+        sku = 'standard';
+        boxnvme.innerHTML = '1TB NVMe<i class="fa-solid fa-check" style="float: right;"></i>';
+        boxRam.innerHTML = '8GB Ram <i class="fa-solid fa-check" style="float: right;"></i>';
+        boxtshirt.innerHTML = 'Full B0rk T-Shirt <i class="fa-solid fa-xmark" style="float: right;"></i>';
+        boxstickers.innerHTML = 'Stickers & Temporary Tatoos <i class="fa-solid fa-xmark" style="float: right;"></i>';          
+        boxBlock.innerHTML = 'Block Zero Floppy Disk <i class="fa-solid fa-xmark" style="float: right;"></i>';
+        boxbadge.innerHTML = 'Digital Founders Badge <i class="fa-solid fa-xmark" style="float: right;"></i>';
+      }
+      if (selectedValue === 'founders') {
+        sku = 'founders';
+        boxnvme.innerHTML = '2TB NVMe<i class="fa-solid fa-check" style="float: right;"></i>';          
+        boxRam.innerHTML = '16GB Ram <i class="fa-solid fa-check" style="float: right;"></i>';
+        boxtshirt.innerHTML = 'Full B0rk T-Shirt <i class="fa-solid fa-check" style="float: right;"></i>';          
+        boxstickers.innerHTML = 'Stickers & Temporary Tatoos <i class="fa-solid fa-check" style="float: right;"></i>';
+        boxBlock.innerHTML = 'Block Zero Floppy Disk <i class="fa-solid fa-xmark" style="float: right;"></i>';
+        boxbadge.innerHTML = 'Digital Founders Badge <i class="fa-solid fa-xmark" style="float: right;"></i>';          
+      }        
+      if (selectedValue === 'b0rk') {
+        sku = 'b0rk';
+        price = '0';
+        boxnvme.innerHTML = '2TB NVMe<i class="fa-solid fa-check" style="float: right;"></i>';          
+        boxRam.innerHTML = '16GB Ram <i class="fa-solid fa-check" style="float: right;"></i>';
+        boxtshirt.innerHTML = 'Full B0rk T-Shirt <i class="fa-solid fa-check" style="float: right;"></i>';
+        boxstickers.innerHTML = 'Stickers & Temporary Tatoos <i class="fa-solid fa-check" style="float: right;"></i>';          
+        boxBlock.innerHTML = 'Block Zero Floppy Disk <i class="fa-solid fa-check" style="float: right;"></i>';
+        boxbadge.innerHTML = 'Digital Founders Badge <i class="fa-solid fa-check" style="float: right;"></i>';          
+      }
+
+      price = '0';
+
+      // Clear Countries selection on change because the shipping values are diferent wen loading
+      bcountrySelect.value = '';
+      countrySelect.value = '';
+
+      // We force the update prices
+      updateTotalPrice();
+      updateProductDetails();      
+    });
+
     updateProductDetails();
     
     // Such function to fetch shipping options based on the selected country
@@ -12,7 +63,7 @@ $(document).ready(function () {
         function (response) {
             if (response.success) {
                 const shippingOptions = response.options;
-                let shippingSelectHtml = '<sl-select name="shippingOptions" id="shipping-options" placeholder="Select one">';
+                let shippingSelectHtml = '<sl-select name="shippingOptions" id="shipping-options" placeholder="Select one" hoist>';
                 shippingOptions.forEach(option => {
                     shippingSelectHtml += `<sl-option value="${option.price_shipping_and_handling_only}">${option.label} - Ð ${option.price_shipping_and_handling_only}</sl-option>`;
                     parseFloat($('#price-doge').text(option.price_product_only));
@@ -178,8 +229,8 @@ $(document).ready(function () {
         const urlParams = new URLSearchParams(window.location.search);
         
         // Fetch 'sku' and 'price' parameters from the URL
-        sku = urlParams.get('sku') || 'b0rk'; // fallback to 'b0rk' if not found
-        price = urlParams.get('price') || '0'; // fallback to '0' if not found
+        //sku = urlParams.get('sku') || 'b0rk'; // fallback to 'b0rk' if not found
+        //price = urlParams.get('price') || '0'; // fallback to '0' if not found
         
         // Update the <span> elements if the values exist
         if (sku) {

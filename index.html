@@ -43,8 +43,50 @@
 </sl-button>
 <div>
 <form class="input-validation-required" id="PayinDoge">
+
+
 <div class="shipping-billing-details">
-    <sl-details summary="Shipping Details" open>
+
+    <sl-details open>
+      <div slot="summary" style="display: flex; align-items: center;">
+        <i class="fa-solid fa-box" style="padding-right: 10px;"></i>
+        <strong>Select DogeBox</small>
+      </div>
+      <sl-select id="dogebox-select" value="b0rk" name="sku" hoist>
+        <sl-option value="standard">Standard Edition</sl-option>
+        <sl-option value="founders">Founders Edition</sl-option>
+        <sl-option value="b0rk">Full Bork</sl-option>        
+      </sl-select>     
+      <sl-card class="card-header" style="width: 100%;">
+        <div slot="header">
+          What is Included
+        </div>
+        <div style="padding: 3px;">T6 Nano PC <i class="fa-solid fa-check" style="float: right;"></i></div>
+        <div id="boxnvme" style="padding: 3px;">2TB NVMe<i class="fa-solid fa-check" style="float: right;"></i></div>
+        <div id="boxram" style="padding: 3px;">16GB Ram <i class="fa-solid fa-check" style="float: right;"></i></div>
+        <div style="padding: 3px;">32GB SD Card <i class="fa-solid fa-check" style="float: right;"></i></div>
+        <div style="padding: 3px;">Universal Power Supply (110-240v) <i class="fa-solid fa-check" style="float: right;"></i></div>
+        <div id="boxtshirt" style="padding: 3px;">Full B0rk T-Shirt <i class="fa-solid fa-check" style="float: right;"></i></div>
+        <div id="boxstickers" style="padding: 3px;">Stickers & Temporary Tatoos <i class="fa-solid fa-check" style="float: right;"></i></div>
+        <div id="boxblock" style="padding: 3px;">Block Zero Floppy Disk <i class="fa-solid fa-check" style="float: right;"></i></div>
+        <div id="boxbadge" style="padding: 3px;">Digital Founders Badge <i class="fa-solid fa-check" style="float: right;"></i></div>
+        <div slot="footer">
+          <sl-button  style="width: -webkit-fill-available !important; min-width: 100%;" variant="primary" onclick="document.querySelector('.gallery').show();"><i class="fa-solid fa-box-open" style="padding-right: 10px;"></i> See Gallery</sl-button>          
+        </div>
+        <sl-dialog class="gallery">
+          <sl-carousel pagination navigation mouse-dragging loop>
+            <sl-carousel-item>
+              <img alt="Dogebox" src="img/dogebox_1.png" style="object-fit: contain !important" />
+            </sl-carousel-item>
+            <sl-carousel-item>
+              <img alt="Dogebox" src="img/dogebox_2.png" style="object-fit: contain !important" />
+            </sl-carousel-item> 
+          </sl-carousel>        
+        </sl-dialog>
+
+      </sl-card>
+    </sl-details>     
+    <sl-details>
       <div slot="summary" style="display: flex; align-items: center;">
         <i class="fa-solid fa-truck-fast" style="padding-right: 10px;"></i>
         <strong>Shipping Details</small>
@@ -52,7 +94,7 @@
             <sl-input placeholder="Name" name="name" clearable required></sl-input>
             <sl-input placeholder="Email" name="email" clearable type="email" required></sl-input>
         
-            <sl-select placeholder="Country" name="country" required>
+            <sl-select placeholder="Country" name="country" hoist required>
                 <!-- List of countries -->
             </sl-select>
         
@@ -73,7 +115,7 @@
       <sl-input placeholder="Name" name="bname" clearable required></sl-input>
       <sl-input placeholder="Email" name="bemail" clearable type="email" required></sl-input>
   
-      <sl-select placeholder="Country" name="bcountry" required>
+      <sl-select placeholder="Country" name="bcountry" hoist required>
           <!-- List of countries -->
       </sl-select>
         
@@ -156,7 +198,7 @@
 
     <div id="size-select" style="display: none;"><code>> Full B0RK T-Shirt:</code> 
       <span id="size-doge">
-        <sl-select placeholder="Size" name="size">
+        <sl-select placeholder="Size" name="size" hoist>
           <sl-option value="S">S</sl-option>
           <sl-option value="M">M</sl-option>
           <sl-option value="L">L</sl-option>

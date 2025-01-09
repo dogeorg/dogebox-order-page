@@ -105,6 +105,10 @@ sl-tab::part(base):hover {
     margin: auto;     
 }
 
+.fa-check{
+    color: rgb(47, 180, 10); 
+}
+
 @media (max-width: 600px) {
     .dogeboxgrid {
         display: inline-grid !important;
