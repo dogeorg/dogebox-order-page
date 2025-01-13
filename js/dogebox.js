@@ -15,6 +15,7 @@ $(document).ready(function () {
       // We change the DogeBox details
       if (selectedValue === 'standard') {
         sku = 'standard';
+        dogeprice.innerHTML = 'Ð 1000.00 <span>+ shipping</span>';
         boxnvme.innerHTML = '1TB NVMe<i class="fa-solid fa-check" style="float: right;"></i>';
         boxRam.innerHTML = '8GB Ram <i class="fa-solid fa-check" style="float: right;"></i>';
         boxtshirt.innerHTML = 'Full B0rk T-Shirt <i class="fa-solid fa-xmark" style="float: right;"></i>';
@@ -24,6 +25,7 @@ $(document).ready(function () {
       }
       if (selectedValue === 'founders') {
         sku = 'founders';
+        dogeprice.innerHTML = 'Ð 2000.00 <span>+ shipping</span>';
         boxnvme.innerHTML = '2TB NVMe<i class="fa-solid fa-check" style="float: right;"></i>';          
         boxRam.innerHTML = '16GB Ram <i class="fa-solid fa-check" style="float: right;"></i>';
         boxtshirt.innerHTML = 'Full B0rk T-Shirt <i class="fa-solid fa-check" style="float: right;"></i>';          
@@ -34,6 +36,7 @@ $(document).ready(function () {
       if (selectedValue === 'b0rk') {
         sku = 'b0rk';
         price = '0';
+        dogeprice.innerHTML = 'Ð 4200.69 <span>+ shipping</span>';
         boxnvme.innerHTML = '2TB NVMe<i class="fa-solid fa-check" style="float: right;"></i>';          
         boxRam.innerHTML = '16GB Ram <i class="fa-solid fa-check" style="float: right;"></i>';
         boxtshirt.innerHTML = 'Full B0rk T-Shirt <i class="fa-solid fa-check" style="float: right;"></i>';
