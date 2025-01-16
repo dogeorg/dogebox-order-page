@@ -8,7 +8,63 @@ class GigaWalletBridge {
     private $config;     // include GigaWallet Configurations
     public function __construct($config) {
         $this->config = $config;
+        $this->firstrunDB();
     }
+
+    // Check DB and create Table & Import Structure if not exists
+    private function firstrunDB() {
+
+        try {        
+            $conn = new mysqli($this->config["dbHost"], $this->config["dbUser"], $this->config["dbPass"], $this->config["dbName"], $this->config["dbPort"]);
+        
+            if ($conn->connect_error) {
+                die("Much Sad, Connection failed: " . $conn->connect_error);
+            }
+        
+            // Check if the `shibes` table exists
+            $tableExists = $conn->query("SHOW TABLES LIKE 'shibes'");
+            if ($tableExists->num_rows == 0) {
+                // SQL to create the `shibes` table
+                $sql = <<<SQL
+                    CREATE TABLE `shibes` (
+                        `id` int(11) NOT NULL AUTO_INCREMENT,
+                        `name` varchar(255) DEFAULT NULL,
+                        `email` varchar(255) DEFAULT NULL,
+                        `country` varchar(255) DEFAULT NULL,
+                        `address` varchar(255) DEFAULT NULL,
+                        `postalCode` varchar(255) DEFAULT NULL,
+                        `dogeAddress` varchar(255) DEFAULT NULL,
+                        `size` varchar(255) DEFAULT NULL,
+                        `bname` varchar(255) DEFAULT NULL,
+                        `bemail` varchar(255) DEFAULT NULL,
+                        `bcountry` varchar(255) DEFAULT NULL,
+                        `baddress` varchar(255) DEFAULT NULL,
+                        `bpostalCode` varchar(255) DEFAULT NULL,
+                        `amount` decimal(20,8) DEFAULT NULL,
+                        `PaytoDogeAddress` varchar(255) DEFAULT NULL,
+                        `paid` tinyint(1) DEFAULT NULL,
+                        `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                        PRIMARY KEY (`id`)
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+                SQL;
+        
+                // Execute the query
+                if ($conn->query($sql) === TRUE) {
+                    //echo "Much wow, Table `shibes` created successfully.\n";
+                } else {
+                    die("Much Sad, Error creating table: " . $conn->error);
+                }
+            } else {
+                //echo "Much wow, Table `shibes` already exists.\n";
+            }
+        
+            $conn->close();
+        } catch (Exception $e) {
+            echo " - DB Test Failled ❌\n";
+        }        
+    }
+    
+
 
     // Test DB
     public function testDbConnection() {

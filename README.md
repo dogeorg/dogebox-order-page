@@ -7,11 +7,9 @@
 - GigaWallet Server
 - Shipper Server (https://github.com/dogeorg/shipper)
 
- ### Import shibes.sql to the MariaDb/MySQL
+ ### Create a MariaDb/MySQL Database and User and the script will auto verify if exists and create the DB Table and fields if needed
  ### Configuration needed on conf.php to connect to all servers 
- ### Subscribe on GigaWallet for INV_TOTAL_PAYMENT_DETECTED to URL/callback/ to update payments
-
- ### Open inc/conf.php and set:
+ ### Subscribe on GigaWallet for PAYMENT_RECEIVED to URL/callback/ to update payments
 
 ```
 // Order host URL
@@ -19,7 +17,7 @@ $config['orderHost'] = 'https://localhost/order/';
 
 // GigaWallet Server configuration
 // Attenttion **
-// Subscribe on GigaWallet for INV_TOTAL_PAYMENT_DETECTED to /inc/callback/ to update payments
+// Subscribe on GigaWallet for PAYMENT_RECEIVED to /callback/ to update payments
 // Attenttion **
 $config['GigaServer'][0] = 'localhost'; // admin server
 $config['GigaPort'][0] = 420; // admin server port
@@ -49,4 +47,4 @@ $config['shipperHost'] = 'http://localhost:3000';
 
 ```
 
-###To run a test open your browser on https://localhost/inc/tests/
+###To run a test open your browser on https://localhost/tests/
