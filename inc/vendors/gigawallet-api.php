@@ -393,7 +393,7 @@ if (!isset($config["tests"])){
 
             // Get Account
             $GigaAccountGet = json_decode($G->account($foreign_id, NULL, NULL, NULL, "GET"));
-            $amount = 1; // only to test gigawallet
+            //$amount = 1; // only to test gigawallet
             // Create Invoice
             $data["required_confirmations"] = 1; // number of confirmations to validate payment
             $i = 0; // item number 0
