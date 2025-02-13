@@ -88,24 +88,24 @@ $(document).ready(function () {
         }, 'json');
     }
 
-    // Such function to update the total price
-    function updateTotalPrice() {
-      
-        const productPrice = parseFloat($('#price-doge').text());
-        const shippingPrice = parseFloat($('#shipping-options').val());
-        const totalPrice = productPrice + shippingPrice;
-        $('#total-doge').text(totalPrice);
-        $('#amount').html('Ð ' + totalPrice);
-    }
-
 
     // Such function to update the total price
     function updateTotalPrice() {      
         const productPrice = parseFloat($('#price-doge').text());
         const shippingPrice = parseFloat($('#shipping-options').val());
         const totalPrice = productPrice + shippingPrice;
-        $('#total-doge').text(totalPrice);
-        $('#amount').html('Ð ' + totalPrice);
+
+        // Such get the URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        // Test 1 Doge
+        onedoge = urlParams.get('test') || '0'
+        if (onedoge == 1){
+            $('#total-doge').text(onedoge);
+            $('#amount').html('Ð ' + onedoge);
+        }else{
+            $('#total-doge').text(totalPrice);
+            $('#amount').html('Ð ' + totalPrice);
+        }
     }
 
     // Much when country is changed, fetch shipping options
@@ -150,7 +150,7 @@ $(document).ready(function () {
         }
     });
 
-    // a Bub on Mobile Google Chrome only, tryng to debug
+    // a Bug on Mobile Google Chrome only, tryng to debug
     async function sendtoGigaWallet() {
 
     const form = document.getElementById('PayinDoge');
@@ -158,7 +158,7 @@ $(document).ready(function () {
     if (!form.reportValidity()) {
         return;
     }
-
+    
     const formData = {
         sku: sku,
         name: $('sl-input[name="name"]').val(),
@@ -229,11 +229,14 @@ $(document).ready(function () {
 
 
         // Such get the URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
-        
+        //const urlParams = new URLSearchParams(window.location.search);
+        // Test 1 Doge
+        //onedoge = urlParams.get('test') || '0'
         // Fetch 'sku' and 'price' parameters from the URL
         //sku = urlParams.get('sku') || 'b0rk'; // fallback to 'b0rk' if not found
         //price = urlParams.get('price') || '0'; // fallback to '0' if not found
+
+   
         
         // Update the <span> elements if the values exist
         if (sku) {
