@@ -105,7 +105,7 @@ class GigaWalletBridge {
     public function testtSMTPConnection() {
 
         try {
-            $email = $this->mailx("test@dogecoin.com",$this->config["email_from"],$this->config["mail_name_from"],$this->config["email_from"],$this->config["email_password"],$this->config["email_port"],$this->config["email_stmp"],"test","test");
+            $email = $this->mailx("test@dogecoin.com",$this->config["email_from"],$this->config["email_name_from"],$this->config["email_username"],$this->config["email_password"],$this->config["email_port"],$this->config["email_stmp"],"test","test");
             if ($email != "Error") {
                 echo " - SMTP Test Passed ✅\n";
             } else {
@@ -148,7 +148,7 @@ class GigaWalletBridge {
         // We include the email order template
         include("../mail/order_template.php");
         
-        $this->mailx($email,$this->config["email_from"],$this->config["mail_name_from"],$this->config["email_from"],$this->config["email_password"],$this->config["email_port"],$this->config["email_stmp"],$mail_subject,$mail_message);    
+        $this->mailx($email,$this->config["email_from"],$this->config["email_name_from"],$this->config["email_username"],$this->config["email_password"],$this->config["email_port"],$this->config["email_stmp"],$mail_subject,$mail_message);    
 
     }
 
@@ -188,7 +188,7 @@ class GigaWalletBridge {
         // We include the email payment template
         include("../mail/payment_template.php");
         
-        $this->mailx($email,$this->config["email_from"],$this->config["mail_name_from"],$this->config["email_from"],$this->config["email_password"],$this->config["email_port"],$this->config["email_stmp"],$mail_subject,$mail_message);            
+        $this->mailx($email,$this->config["email_from"],$this->config["email_name_from"],$this->config["email_username"],$this->config["email_password"],$this->config["email_port"],$this->config["email_stmp"],$mail_subject,$mail_message);            
     }
 
     // Creates/Gets a GigaWallet Account
