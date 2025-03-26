@@ -1,6 +1,6 @@
 # DogeBox Order Page
 
-###Requirements:
+### Requirements:
 - PHP 8.X
 - MariaDB or MySQL (Latest)
 - SMTP Server
@@ -34,10 +34,11 @@ $config['dbName'] = 'dogebox';
 $config['dbPort'] = 3306;
 
 // SMTP Email Server Configuration
-$config['mail_name_from'] = 'DogeBox'; // name to show on all emails sent
+$config['email_name_from'] = 'DogeBox'; // name to show on all emails sent
 $config['email_from'] = 'no-reply@localhost'; // email to show and reply on all emails sent
 $config['email_reply_to'] = 'no-reply@localhost'; // email to reply
-$config['email_port'] = 465;
+$config['email_port'] = 465; // SSL 465 / TLS 587
+$config['email_username'] = 'suchuser';
 $config['email_password'] = 'suchpass';
 $config['email_stmp'] = 'localhost';
 
@@ -47,4 +48,4 @@ $config['shipperHost'] = 'http://localhost:3000';
 
 ```
 
-###To run a test open your browser on https://localhost/tests/
+### To run a test open your browser on https://localhost/tests/
